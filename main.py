@@ -1,19 +1,13 @@
-from reportlab.pdfgen import canvas
+import worksheet
 
 
 FILENAME = "123RatWorksheet.pdf"
 
 
-def draw_page_xy(worksheet):
-    for i in range(0, 11):
-        worksheet.drawString(i * 100, 0, f"x={i*100}")
-        worksheet.drawString(0, i * 100, f"y={i*100}")
-
-
 def main():
-    worksheet = canvas.Canvas(FILENAME)
-    draw_page_xy(worksheet)
-    worksheet.save()
+    pdf = worksheet.Worksheet(FILENAME)
+    pdf.draw_page_xy_ruler()
+    pdf.generate_pdf()
 
 
 if __name__ == "__main__":

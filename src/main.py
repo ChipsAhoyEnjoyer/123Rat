@@ -2,7 +2,6 @@ import worksheet
 
 
 FILENAME = "123RatWorksheet.pdf"
-TITLE = "123Rat WorkSheet"
 
 
 def main():

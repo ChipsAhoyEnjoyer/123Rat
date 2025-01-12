@@ -1,4 +1,6 @@
 from PIL import Image
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
 
 
 def remove_image_alpha_channels(path):
@@ -24,3 +26,7 @@ def remove_image_alpha_channels(path):
 
     # Optionally, you can save it as JPG, which doesn't support transparency
     # image_no_alpha.save("image_no_alpha.jpg")
+
+
+def register_new_font(font_name, font_path):
+    pdfmetrics.registerFont(TTFont(font_name, font_path))

@@ -5,7 +5,7 @@ FILENAME = "123RatWorksheet.pdf"
 
 
 def main():
-    pdf = worksheet.Worksheet(FILENAME, draw_ruler=True)
+    pdf = worksheet.Worksheet(FILENAME)
     pdf.generate_pdf()
 
 

@@ -1,6 +1,7 @@
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
+from reportlab.lib.colors import red, blue, yellow
 from PIL import Image
 import tools
 
@@ -16,19 +17,23 @@ FONT_SIZE = 20
 
 class Worksheet:
     def __init__(self, file_name: str):
-        self.file = canvas.Canvas(file_name)
-        self.width = None
-        self.height = None
+        self.file = canvas.Canvas(file_name, pagesize=letter)
+        self.width, self.height = letter
         self._page_setup()
 
     def set_title(self, title: str):
         self.file.setTitle(title)
 
-    def font_settings(self, font_size: float, font: str = None):
+    def font_settings(self, font_size: float, font: str = None, rgb: tuple[float, float, float] = None):
+        if rgb:
+            self.fill_color(rgb)
         if not font:
             self.file.setFontSize(font_size)
             return
         self.file.setFont(font, font_size)
+
+    def fill_color(self, rgb: tuple[float, float, float] = None):
+        self.file.setFillColorRGB(*rgb)
 
     def line_width(self, width: float):
         self.file.setLineWidth(width)
@@ -100,13 +105,9 @@ class Worksheet:
 
     def _page_setup(self):
         # Set page size to American standard
-        self.file.setPageSize(letter)
-        self.width, self.height = letter
         self.font_settings(LOGO_FONT_SIZE, FONT)
         self.set_title(TITLE)
         self._draw_logo()
         # self._draw_page_xy_ruler()  # Page ruler to help with mapping
 
-# TODO: Added ability to change colors in font settings
 # TODO: create exercises
-

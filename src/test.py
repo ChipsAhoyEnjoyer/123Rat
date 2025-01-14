@@ -22,6 +22,9 @@ class TestWorksheet:
     def test_font_sizes_and_fonts(self):
         pass
 
+    def test_fill_color(self):
+        pass
+
 
 def main():
     test = TestWorksheet("test_worksheet")
@@ -36,3 +39,5 @@ def main():
 
 if __name__ == "__test__":
     main()
+
+# TODO: Have testing for each worksheet method

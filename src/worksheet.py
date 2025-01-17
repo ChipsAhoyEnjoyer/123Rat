@@ -20,6 +20,7 @@ class Worksheet:
         self.file = canvas.Canvas(file_name, pagesize=letter)
         self.logo = logo
         self.width, self.height = letter
+        self.y_space = self.height
         self._page_setup()
 
     def set_title(self, title: str):
@@ -98,7 +99,7 @@ class Worksheet:
                 self.width,
                 ((i / 10) * self.height))
 
-    def _draw_logo(self):
+    def _draw_logo(self) -> int:
         img = Image.open(LOGO_PATH)
         self.draw_image(
             LOGO_PATH,
@@ -106,13 +107,13 @@ class Worksheet:
             (self.height - img.height)
         )
         self.write(*LOGO)
+        return img.height
 
     def _page_setup(self):
         # Set page size to American standard
         self.font_settings(LOGO_FONT_SIZE, FONT)
         self.set_title(TITLE)
         if self.logo:
-            self._draw_logo()
+            logo_height = self._draw_logo()
+            self.y_space -= logo_height
         # self._draw_page_xy_ruler()  # Page ruler to help with mapping
-
-# TODO: create exercises

@@ -26,14 +26,17 @@ class Worksheet:
 
     def font_settings(self, font_size: float, font: str = None, rgb: tuple[float, float, float] = None):
         if rgb:
-            self.fill_color(rgb)
+            self.text_fill_color(rgb)
         if not font:
             self.file.setFontSize(font_size)
             return
         self.file.setFont(font, font_size)
 
-    def fill_color(self, rgb: tuple[float, float, float] = None):
+    def text_fill_color(self, rgb: tuple[float, float, float]):
         self.file.setFillColorRGB(*rgb)
+
+    def line_fill_color(self, rgb: tuple[float, float, float]):
+        self.file.setStrokeColorRGB(*rgb)
 
     def line_width(self, width: float):
         self.file.setLineWidth(width)

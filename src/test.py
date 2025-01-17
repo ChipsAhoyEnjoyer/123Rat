@@ -3,7 +3,7 @@ from worksheet import Worksheet, FONT
 
 class TestWorksheet:
     def __init__(self, filename: str):
-        self.test = Worksheet(filename)
+        self.test = Worksheet(filename, logo=False)
 
     def test_write_fill_color(self):
         self.test.font_settings(
@@ -30,6 +30,13 @@ class TestWorksheet:
         self.test.line_fill_color((255, 0, 0))
         x1, y1, x2, y2 = 0, (self.test.height / 2), self.test.width, (self.test.height / 2)
         self.test.draw_line(x1, y1, x2, y2)
+
+    def text_draw_image(self):
+        path = None
+        x = self.test.width / 2
+        y = self.test.height / 2
+        if path:
+            self.test.draw_image(path, x, y)
 
 
 def main():

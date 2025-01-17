@@ -16,8 +16,9 @@ FONT_SIZE = 20
 
 
 class Worksheet:
-    def __init__(self, file_name: str):
+    def __init__(self, file_name: str, logo: bool = True):
         self.file = canvas.Canvas(file_name, pagesize=letter)
+        self.logo = logo
         self.width, self.height = letter
         self._page_setup()
 
@@ -110,7 +111,8 @@ class Worksheet:
         # Set page size to American standard
         self.font_settings(LOGO_FONT_SIZE, FONT)
         self.set_title(TITLE)
-        self._draw_logo()
+        if self.logo:
+            self._draw_logo()
         # self._draw_page_xy_ruler()  # Page ruler to help with mapping
 
 # TODO: create exercises

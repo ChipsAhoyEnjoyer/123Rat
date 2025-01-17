@@ -1,4 +1,8 @@
-from worksheet import Worksheet
+from worksheet import Worksheet, FONT
+import tools
+
+# FONT = "comic_sans"
+# tools.register_new_font(FONT, "../assets/Comic Sans MS.ttf")
 
 
 class TestWorksheet:
@@ -6,7 +10,17 @@ class TestWorksheet:
         self.test = Worksheet(filename)
 
     def test_write(self):
-        pass
+        self.test.font_settings(
+            6,
+            FONT,
+            (255, 0, 0)
+        )
+
+        self.test.write(
+            100,
+            100,
+            "Testing"
+        )
 
     def test_draw_line(self):
         pass
@@ -27,7 +41,7 @@ class TestWorksheet:
 
 
 def main():
-    test = TestWorksheet("test_worksheet")
+    test = TestWorksheet("test_worksheet.pdf")
     test.test_write()
     test.test_draw_line()
     test.test_draw_dashed()
@@ -37,7 +51,7 @@ def main():
     return 0
 
 
-if __name__ == "__test__":
+if __name__ == "__main__":
     main()
 
 # TODO: Have testing for each worksheet method

@@ -1,7 +1,5 @@
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
-from reportlab.lib.units import inch
-from reportlab.lib.colors import red, blue, yellow
 from PIL import Image
 import tools
 
@@ -16,9 +14,10 @@ FONT_SIZE = 20
 
 
 class Worksheet:
-    def __init__(self, file_name: str, logo: bool = True):
+    def __init__(self, file_name: str, logo: bool = True, ruler: bool = False):
         self.file = canvas.Canvas(file_name, pagesize=letter)
         self.logo = logo
+        self.ruler = ruler
         self.width, self.height = letter
         self.y_space = self.height
         self._page_setup()
@@ -116,4 +115,7 @@ class Worksheet:
         if self.logo:
             logo_height = self._draw_logo()
             self.y_space -= logo_height
-        # self._draw_page_xy_ruler()  # Page ruler to help with mapping
+        if self.ruler:
+            self.font_settings(12)
+            self._draw_page_xy_ruler()  # Page ruler to help with mapping
+        self.font_settings(FONT_SIZE)

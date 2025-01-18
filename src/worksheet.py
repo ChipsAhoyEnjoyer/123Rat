@@ -8,8 +8,9 @@ LOGO_PATH = "../assets/rat.png"
 LOGO = (155, 712, "123Rat")
 LOGO_FONT_SIZE = 36
 TITLE = "123Rat WorkSheet"
-FONT = "comic_sans"
-tools.register_new_font(FONT, "../assets/Comic Sans MS.ttf")
+LOGO_FONT = "comic_sans"
+tools.register_new_font(LOGO_FONT, "../assets/Comic Sans MS.ttf")
+HELVETICA = "Helvetica"
 FONT_SIZE = 20
 
 
@@ -110,7 +111,7 @@ class Worksheet:
 
     def _page_setup(self):
         # Set page size to American standard
-        self.font_settings(LOGO_FONT_SIZE, FONT)
+        self.font_settings(LOGO_FONT_SIZE, LOGO_FONT)
         self.set_title(TITLE)
         if self.logo:
             logo_height = self._draw_logo()

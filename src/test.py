@@ -27,7 +27,7 @@ class TestWorksheet:
         self.test.draw_dashed(1, 1, x1, y1, x2, y2)
 
     def test_line_fill_color(self):
-        self.test.line_fill_color((255, 0, 0))
+        self.test.line_stroke_color((255, 0, 0))
         x1, y1, x2, y2 = 0, (self.test.height / 2), self.test.width, (self.test.height / 2)
         self.test.draw_line(x1, y1, x2, y2)
 

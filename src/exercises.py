@@ -6,7 +6,8 @@ tools.register_new_font(HINDMYSURU, "../assets/HindMysuru-Light.ttf")
 TRACE_FONT = "Trace"
 tools.register_new_font(TRACE_FONT, "../assets/Trace.TTF")
 GUIDELINE_FONT_SIZE = 45
-BLACK_RGB = (0, 0, 0)
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 
 FULL_WIDTH = 612.0
 FULL_HEIGHT = 792.0
@@ -32,6 +33,24 @@ class Exercise:
 
     def decrement_y_space(self, val: int):
         self.y_space -= val
+
+    def draw_rect(self, x: float, y: float, width: float, height: float):
+        self.worksheet.file.rect(x, y, width, height)
+
+    def draw_circle(self, x: float, y: float, rad: float):
+        self.worksheet.file.circle(x, y, rad)
+
+    def draw_triangle(self, x: float, y: float, side_len: float):
+        self.worksheet.draw_line(x, y, x + side_len, y)
+        self.worksheet.draw_line(x, y, x + (side_len / 2), y + side_len)
+        self.worksheet.draw_line(x + side_len, y, x + (side_len / 2), y + side_len)
+
+    def draw_shape(self):
+        length = 50
+
+        self.worksheet.fill_color(WHITE)
+        self.worksheet.line_stroke_color(BLACK)
+        # TODO: finish
 
     def generate_guideline(self, chars: str = None):
         x1, x2 = RULED_LINE_LENGTH
@@ -59,7 +78,7 @@ class Exercise:
             self.worksheet.font_settings(
                 font_size=GUIDELINE_FONT_SIZE,
                 font=TRACE_FONT,
-                rgb=BLACK_RGB
+                rgb=BLACK
             )
             formatted_chars = f"{chars} {chars} {chars}"
             self.worksheet.write(RULED_LINE_LENGTH[0] + 5, self.y_space, formatted_chars)
@@ -68,7 +87,7 @@ class Exercise:
         self.worksheet.font_settings(
             font_size=GUIDELINE_FONT_SIZE,
             font=HINDMYSURU,
-            rgb=BLACK_RGB
+            rgb=BLACK
         )
         self.decrement_y_space(LARGE_SPACE)
         self.worksheet.write(RULED_LINE_LENGTH[0] + 5, self.y_space, letter)

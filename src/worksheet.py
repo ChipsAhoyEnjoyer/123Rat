@@ -67,6 +67,18 @@ class Worksheet:
         self.draw_line(start_x, start_y, end_x, end_y)
         self.file.setDash()  # reset lines so no more dashes
 
+    def draw_rect(self, x: float, y: float, width: float, height: float):
+        self.file.rect(x, y, width, height)
+
+    def draw_circle(self, x: float, y: float, rad: float):
+        self.file.circle(x, y, rad)
+
+    def draw_triangle(self, x: float, y: float, side_len: float):
+        self.draw_line(x, y, x + side_len, y)
+        self.draw_line(x, y, x + (side_len / 2), y + side_len)
+        self.draw_line(x + side_len, y, x + (side_len / 2), y + side_len)
+
+
     def draw_image(self, path, x: float, y: float):
         self.file.drawImage(
             path,

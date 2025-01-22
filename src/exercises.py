@@ -11,6 +11,7 @@ GUIDELINE_FONT_SIZE = 45
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 SHAPES = ("triangle", "square", "circle")
+WORDS = ("Dog", "Cat", "")
 
 FULL_WIDTH = 612.0
 FULL_HEIGHT = 792.0
@@ -20,6 +21,7 @@ RULED_LINE_WIDTH_THICK = 1
 DASHED_LINE_FULL_LENGTH = (72, 548)
 DASHED_LINE_WIDTH = 0.5
 DASH_LENGTH = (DASHED_LINE_FULL_LENGTH[1] - DASHED_LINE_FULL_LENGTH[0]) / 30
+X_COORD_TO_START_WRITING = 67
 LARGE_SPACE = 40
 SMALL_SPACE = 20
 TINY_SPACE = 10
@@ -62,21 +64,40 @@ class ColorShapeExercise(Exercise):
             case _:
                 raise ValueError("Invalid shape; Shape not registered")
 
-    def color_shape_exercise(self):
+    def _set_color_shape_line_settings(self):
         self.file.fill_color(WHITE)
         self.file.line_stroke_color(BLACK)
         self.file.line_width(RULED_LINE_WIDTH_THICK)
 
-        max_shapes_per_y_space = 5
-        num_of_shapes = self.number
+    def _instruction_setup(self):
+        instructions = f"Color {self.number} {self.shape}s"
+        self.decrement_y_space(TINY_SPACE + GUIDELINE_FONT_SIZE)
+        self.file.font_settings(GUIDELINE_FONT_SIZE, HINDMYSURU, BLACK)
+        self.file.write(X_COORD_TO_START_WRITING, self.y_space, instructions)
 
-        number_of_y_levels = ceil(num_of_shapes / max_shapes_per_y_space)
-        shapes_per_y_level = min(num_of_shapes, max_shapes_per_y_space)
-        x_spacing = self.file.width * (1 / (shapes_per_y_level + 1))
+    def num_shapes_per_y_levels(self) -> int:
+        max_shapes_per_y_space = 5
+        if self.number <= 5:
+            return 5
+        while max_shapes_per_y_space > 1:
+            if self.number % max_shapes_per_y_space == 0:
+                return max_shapes_per_y_space
+            max_shapes_per_y_space -= 1
+        return 5
+
+    def round_number_of_shapes(self):
+        base = 5
+        if self.number % base == 0:
+            return self.number + base
+        return base * (ceil(self.number / base))
+
+    def draw_shapes(self, number_of_y_levels: int, num_of_shapes: int, shapes_per_y_level: int):
+        self.decrement_y_space(TINY_SPACE)
         current_x = 0
         shapes_left = num_of_shapes
         for _ in range(number_of_y_levels):
             self.decrement_y_space(TINY_SPACE + SHAPE_LENGTH)
+            x_spacing = self.file.width * (1 / min(shapes_per_y_level + 1, shapes_left + 1))
             for _ in range(shapes_per_y_level):
                 if shapes_left:
                     current_x += x_spacing
@@ -85,6 +106,14 @@ class ColorShapeExercise(Exercise):
                 else:
                     break
             current_x = 0
+
+    def color_shape_exercise(self):
+        self._set_color_shape_line_settings()
+        self._instruction_setup()
+        shapes_per_y_level = self.num_shapes_per_y_levels()
+        num_of_shapes = self.round_number_of_shapes()
+        number_of_y_levels = ceil(num_of_shapes / shapes_per_y_level)
+        self.draw_shapes(number_of_y_levels, num_of_shapes, shapes_per_y_level)
 
 
 class LetterTraceExercise(Exercise):
@@ -97,7 +126,9 @@ class LetterTraceExercise(Exercise):
             self.file = file
             self.y_space = file.y_space
         if self.file is None:
-            raise ValueError("Wrong class type")
+            raise ValueError(
+                "LetterTraceExercise type objects only take accept Worksheet or Exercise type objects as files"
+            )
         self.chars = chars
         self.letter_trace_exercise()
 
@@ -130,7 +161,7 @@ class LetterTraceExercise(Exercise):
                 rgb=BLACK
             )
             formatted_chars = f"{self.chars} {self.chars} {self.chars}"
-            self.file.write(RULED_LINE_LENGTH[0] + 5, self.y_space, formatted_chars)
+            self.file.write(X_COORD_TO_START_WRITING, self.y_space, formatted_chars)
 
     def letter_trace_exercise(self):
         if self.chars:
@@ -141,7 +172,7 @@ class LetterTraceExercise(Exercise):
             )
             self.decrement_y_space(LARGE_SPACE)
             self.file.write(RULED_LINE_LENGTH[0] + 5, self.y_space, self.chars)
-        self.generate_guideline(True)
+        self.generate_guideline(traceable=True)
         self.generate_guideline()
 
 
@@ -152,7 +183,6 @@ if __name__ == "__main__":
     exercises.generate_exercises()
 
 # TODO: add Testing
-# TODO: add Tkinter UI
-# TODO: make logo prettier
 # TODO: make shapes smaller and more huddled
-# TODO: last row of shapes should centered
+# TODO: make is so that the each exercise has a y_space requirement and that you can't draw past the page
+# TODO: add another exercise subclass, maybe (Match the word with the picture) or (Addition/Subtraction)

@@ -27,43 +27,52 @@ SHAPE_LENGTH = 50
 
 
 class Exercise:
-    def __init__(self, file: Worksheet):
-        self.worksheet = file
-        self.y_space = file.y_space
-        # file.draw_line(0, self.y_space, file.width, self.y_space)
+    def __init__(self):
+        self.file = None
+        self.y_space = None
 
     def generate_exercises(self):
-        self.worksheet.generate_pdf()
+        self.file.generate_pdf()
 
     def decrement_y_space(self, val: int):
         self.y_space -= val
 
-    def draw_shape(self, x: float, shape: str):
-        match shape:
+
+class ColorShapeExercise(Exercise):
+    def __init__(self, file: Worksheet | Exercise, shape: str | None = None, number: int | None = None):
+        super().__init__()
+        if isinstance(file, Exercise):
+            self.file = file.file
+            self.y_space = file.y_space
+        elif isinstance(file, Worksheet):
+            self.file = file
+            self.y_space = file.y_space
+        self.shape = shape if shape is not None else choice(SHAPES)
+        self.number = number if number is not None else randint(5, 20)
+        self.color_shape_exercise()
+
+    def draw_shape(self, x: float):
+        match self.shape:
             case "square":
-                self.worksheet.draw_rect(x - (SHAPE_LENGTH / 2), self.y_space, SHAPE_LENGTH, SHAPE_LENGTH)
+                self.file.draw_rect(x - (SHAPE_LENGTH / 2), self.y_space, SHAPE_LENGTH, SHAPE_LENGTH)
             case "circle":
-                self.worksheet.draw_circle(x, self.y_space + (SHAPE_LENGTH / 2), SHAPE_LENGTH / 2)
+                self.file.draw_circle(x, self.y_space + (SHAPE_LENGTH / 2), SHAPE_LENGTH / 2)
             case "triangle":
-                self.worksheet.draw_triangle(x - (SHAPE_LENGTH / 2), self.y_space, SHAPE_LENGTH)
+                self.file.draw_triangle(x - (SHAPE_LENGTH / 2), self.y_space, SHAPE_LENGTH)
             case _:
                 raise ValueError("Invalid shape; Shape not registered")
 
-    def color_shape_exercise(self, val: int = None):
-        self.worksheet.fill_color(WHITE)
-        self.worksheet.line_stroke_color(BLACK)
-        self.worksheet.line_width(RULED_LINE_WIDTH_THICK)
+    def color_shape_exercise(self):
+        self.file.fill_color(WHITE)
+        self.file.line_stroke_color(BLACK)
+        self.file.line_width(RULED_LINE_WIDTH_THICK)
 
-        shape = choice(SHAPES)
         max_shapes_per_y_space = 5
-        if val is not None:
-            num_of_shapes = val
-        else:
-            num_of_shapes = randint(5, 20)
+        num_of_shapes = self.number
 
         number_of_y_levels = ceil(num_of_shapes / max_shapes_per_y_space)
         shapes_per_y_level = min(num_of_shapes, max_shapes_per_y_space)
-        x_spacing = self.worksheet.width * (1 / (shapes_per_y_level + 1))
+        x_spacing = self.file.width * (1 / (shapes_per_y_level + 1))
         current_x = 0
         shapes_left = num_of_shapes
         for _ in range(number_of_y_levels):
@@ -71,24 +80,36 @@ class Exercise:
             for _ in range(shapes_per_y_level):
                 if shapes_left:
                     current_x += x_spacing
-                    self.draw_shape(current_x, shape)
+                    self.draw_shape(current_x)
                     shapes_left -= 1
                 else:
-                    return
+                    break
             current_x = 0
 
 
+class LetterTraceExercise(Exercise):
+    def __init__(self, file, chars: str = None):
+        super().__init__()
+        if isinstance(file, Exercise):
+            self.file = file.file
+            self.y_space = file.y_space
+        elif isinstance(file, Worksheet):
+            self.file = file
+            self.y_space = file.y_space
+        if self.file is None:
+            raise ValueError("Wrong class type")
+        self.chars = chars
+        self.letter_trace_exercise()
 
-
-    def generate_guideline(self, chars: str = None):
+    def generate_guideline(self, traceable: bool = False):
         x1, x2 = RULED_LINE_LENGTH
-        self.worksheet.line_width(RULED_LINE_WIDTH_THICK)
-        self.worksheet.draw_line(x1, (self.y_space - TINY_SPACE), x2, (self.y_space - TINY_SPACE))
+        self.file.line_width(RULED_LINE_WIDTH_THICK)
+        self.file.draw_line(x1, (self.y_space - TINY_SPACE), x2, (self.y_space - TINY_SPACE))
         self.decrement_y_space(TINY_SPACE)
 
         dash_x1, dash_x2 = DASHED_LINE_FULL_LENGTH
-        self.worksheet.line_width(DASHED_LINE_WIDTH)
-        self.worksheet.draw_dashed(
+        self.file.line_width(DASHED_LINE_WIDTH)
+        self.file.draw_dashed(
             dash_len=DASH_LENGTH,
             gap_len=DASH_LENGTH,
             start_x=dash_x1,
@@ -98,35 +119,40 @@ class Exercise:
         )
         self.decrement_y_space(SMALL_SPACE)
 
-        self.worksheet.line_width(RULED_LINE_WIDTH_THICK)
-        self.worksheet.draw_line(x1, (self.y_space - SMALL_SPACE), x2, (self.y_space - SMALL_SPACE))
+        self.file.line_width(RULED_LINE_WIDTH_THICK)
+        self.file.draw_line(x1, (self.y_space - SMALL_SPACE), x2, (self.y_space - SMALL_SPACE))
         self.decrement_y_space(SMALL_SPACE)
 
-        if chars:
-            self.worksheet.font_settings(
+        if traceable:
+            self.file.font_settings(
                 font_size=GUIDELINE_FONT_SIZE,
                 font=TRACE_FONT,
                 rgb=BLACK
             )
-            formatted_chars = f"{chars} {chars} {chars}"
-            self.worksheet.write(RULED_LINE_LENGTH[0] + 5, self.y_space, formatted_chars)
+            formatted_chars = f"{self.chars} {self.chars} {self.chars}"
+            self.file.write(RULED_LINE_LENGTH[0] + 5, self.y_space, formatted_chars)
 
-    def letter_trace_exercise(self, letter: str):
-        self.worksheet.font_settings(
-            font_size=GUIDELINE_FONT_SIZE,
-            font=HINDMYSURU,
-            rgb=BLACK
-        )
-        self.decrement_y_space(LARGE_SPACE)
-        self.worksheet.write(RULED_LINE_LENGTH[0] + 5, self.y_space, letter)
-        self.generate_guideline(letter)
+    def letter_trace_exercise(self):
+        if self.chars:
+            self.file.font_settings(
+                font_size=GUIDELINE_FONT_SIZE,
+                font=HINDMYSURU,
+                rgb=BLACK
+            )
+            self.decrement_y_space(LARGE_SPACE)
+            self.file.write(RULED_LINE_LENGTH[0] + 5, self.y_space, self.chars)
+        self.generate_guideline(True)
         self.generate_guideline()
 
 
 if __name__ == "__main__":
     file_ex = Worksheet("file.pdf", logo=True, ruler=False)
-    exercises = Exercise(file_ex)
-    exercises.color_shape_exercise(8)
+    exercises = LetterTraceExercise(file_ex, "Dog")
+    exercises = ColorShapeExercise(exercises)
     exercises.generate_exercises()
 
-# TODO: add a coloring exercise
+# TODO: add Testing
+# TODO: add Tkinter UI
+# TODO: make logo prettier
+# TODO: make shapes smaller and more huddled
+# TODO: last row of shapes should centered

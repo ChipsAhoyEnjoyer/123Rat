@@ -78,7 +78,6 @@ class Worksheet:
         self.draw_line(x, y, x + (side_len / 2), y + side_len)
         self.draw_line(x + side_len, y, x + (side_len / 2), y + side_len)
 
-
     def draw_image(self, path, x: float, y: float):
         self.file.drawImage(
             path,

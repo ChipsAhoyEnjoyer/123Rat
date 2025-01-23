@@ -2,8 +2,10 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from PIL import Image
 import tools
+import os
 
-
+# TODO: finish
+print(os.path.abspath("../assets/Comic Sans MS.ttf"))
 LOGO_PATH = "../assets/rat.png"
 LOGO = (155, 712, "123Rat")
 LOGO_FONT_SIZE = 36
@@ -15,6 +17,11 @@ FONT_SIZE = 20
 
 
 class Worksheet:
+    """
+    Class used to manipulate reportlab Canvas class because CamelCase is not pythonic *hiss*
+
+    Definitely not my notes from skimming the docs
+    """
     def __init__(self, file_name: str, logo: bool = True, ruler: bool = False):
         self.file = canvas.Canvas(file_name, pagesize=letter)
         self.logo = logo
@@ -86,6 +93,9 @@ class Worksheet:
         )
 
     def _draw_page_xy_ruler(self):
+        """
+        Draw x and y lines on the page for easier plotting
+        """
         for i in range(1, 11):
             self.file.drawString(
                 ((i / 10) * self.width),

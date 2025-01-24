@@ -2,18 +2,19 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from PIL import Image
 import tools
-import os
 
-# TODO: finish
-print(os.path.abspath("../assets/Comic Sans MS.ttf"))
-LOGO_PATH = "../assets/rat.png"
+
 LOGO = (155, 712, "123Rat")
 LOGO_FONT_SIZE = 36
 TITLE = "123Rat WorkSheet"
-LOGO_FONT = "comic_sans"
-tools.register_new_font(LOGO_FONT, "../assets/Comic Sans MS.ttf")
-HELVETICA = "Helvetica"
 FONT_SIZE = 20
+
+# Assets
+
+LOGO_FONT = "comic_sans"
+LOGO_PATH = tools.return_asset_path("rat.png")
+COMIC_SANS_PATH = tools.return_asset_path("ComicSansMS.ttf")
+tools.register_new_font(LOGO_FONT, font_path=COMIC_SANS_PATH)
 
 
 class Worksheet:

@@ -1,8 +1,11 @@
 import worksheet
 import exercises
+from os import path
+from tools import _find_destination
 
 
 FILENAME = "123RatWorksheet.pdf"
+DESTINATION = path.join(_find_destination(), FILENAME)
 VALID_SHAPES = exercises.SHAPES
 
 
@@ -14,17 +17,17 @@ def main():
         shape = input(
             f"Here are some shapes: {' / '.join(VALID_SHAPES)}\n"
             f"Choose a shape to color? Leave blank to choose randomly.\n"
-        )
-        if shape.lower() in VALID_SHAPES or shape == "":
+        ).lower()
+        if shape in VALID_SHAPES or shape == "":
             break
         print("Invalid shape, try again...")
     print("Generating worksheet!")
-    empty_sheet = worksheet.Worksheet(FILENAME)
+    empty_sheet = worksheet.Worksheet(DESTINATION)
     exercise1 = exercises.LetterTraceExercise(empty_sheet, trace1)
     exercise2 = exercises.LetterTraceExercise(exercise1, trace2)
     exercise3 = exercises.ColorShapeExercise(exercise2, shape)
     exercise3.generate_exercises()
-    print(f"Done. Open the {FILENAME} file in the program's src folder to print the results.")
+    print(f"Done. results in: {DESTINATION}.")
 
 
 if __name__ == "__main__":

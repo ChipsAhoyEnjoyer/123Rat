@@ -1,6 +1,8 @@
 from PIL import Image
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
+import os
+import pathlib
 
 
 def remove_image_alpha_channels(path):
@@ -30,3 +32,24 @@ def remove_image_alpha_channels(path):
 
 def register_new_font(font_name, font_path):
     pdfmetrics.registerFont(TTFont(font_name, font_path))
+
+
+def return_asset_path(asset_name: str) -> str:
+    working_dir = os.path.split(os.getcwd())[-1]
+    if working_dir == "123Rat":
+        assets_path = os.path.abspath("assets")
+    elif working_dir == "src":
+        assets_path = os.path.abspath("../assets")
+    else:
+        raise FileNotFoundError("Cannot find 'assets' directory")
+    return os.path.join(assets_path, asset_name)
+
+def _find_destination() -> str:
+    repo_path = pathlib.Path(os.getcwd())
+    parts = repo_path.parts
+    file_path = parts[0]
+    for i in range(len(parts)):
+        file_path = os.path.join(str(file_path), parts[i])
+        if parts[i] == "123Rat":
+            break
+    return str(file_path)

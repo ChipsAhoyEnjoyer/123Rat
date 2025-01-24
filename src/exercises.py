@@ -1,13 +1,16 @@
 from worksheet import Worksheet
-import tools
 from random import choice, randint
 from math import ceil
+import tools
+
 
 # Font setup
+HINDMYSURU_PATH = tools.return_asset_path("HindMysuru-Light.ttf")
+TRACE_FONT_PATH = tools.return_asset_path("Trace.TTF")
 HINDMYSURU = "Hind_Mysuru_Light"  # Standard font
-tools.register_new_font(HINDMYSURU, "../assets/HindMysuru-Light.ttf")
+tools.register_new_font(HINDMYSURU, font_path=HINDMYSURU_PATH)
 TRACE_FONT = "Trace"  # Trace font
-tools.register_new_font(TRACE_FONT, "../assets/Trace.TTF")
+tools.register_new_font(TRACE_FONT, font_path=TRACE_FONT_PATH)
 GUIDELINE_FONT_SIZE = 45
 
 # Variables for exercises
@@ -68,7 +71,7 @@ class ColorShapeExercise(Exercise):
             self.file = file
             self.y_space = file.y_space
         self.shape = shape if shape != "" else choice(SHAPES)
-        self.number = randint(11, 20)  # Change these number to ones you want your child to practice
+        self.number = randint(11, 15)  # Change these number to ones you want your child to practice
         self.color_shape_exercise()
 
     def draw_shape(self, x: float):

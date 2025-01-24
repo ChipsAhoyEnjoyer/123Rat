@@ -2,13 +2,38 @@
 
 ## PDF worksheets generator for toddlers and yutes!
 
-Simply type in a word or generate a random word
+CLI tool for generating simple worksheets for Pre-k/Kindergartens
 
-It will then generate a PDF worksheet that you can print so that your child can practice writing, and
-counting. More exercises to come
+Available exercises:
 
-## How to run
+Trace the word
+
+Count/Color the shape
+
+## Installation
+
+Clone
+```commandline
+git clone https://github.com/ChipsAhoyEnjoyer/123Rat.git
+```
+
+(optional) activate venv to install dependencies for the project only
+
+Linux/macOS
+```commandline
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Windows
+```commandline
+python -m venv venv
+.\venv\Scripts\activate
+```
+
+#### Run
 
 ```commandline
+pip install -r requirements.txt
 python3 src/main.py
 ```
